@@ -1,10 +1,26 @@
 from collections import defaultdict
 import pandas as pd
 import math
-
+import os
+import random
+import torch
+import numpy as np
+from torch.backends import cudnn
 
 leads = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
 
+def fix_seed(SEED=42):
+    os.environ['SEED'] = str(SEED)
+    os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+    np.random.seed(SEED)
+    random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    torch.cuda.manual_seed_all(SEED)
+    cudnn.benchmark = False
+    cudnn.deterministic = True
+    random.seed(SEED)
+    
 def describe_qrs(lead_prefix: str, row):
     try:
         # QRS duration을 초 단위로 변환 (ms -> s)
